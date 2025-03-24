@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Background</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        form { margin-top: 20px; }
+        #preview { max-width: 300px; margin-top: 10px; display: none; }
+        #download { display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Upload an Image to Remove Background</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageInput" name="image" accept="image/*" required>
+        <br><br>
+        <img id="preview" src="#" alt="Preview">
+        <br><br>
+        <button type="submit">Remove Background</button>
+    </form>
+
+    <a id="download" href="#" download="output.png">Download Processed Image</a>
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('preview').style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            const file = document.getElementById('imageInput').files[0];
+
+            if (!file) {
+                alert("Please upload an image!");
+                return;
+            }
+
+            formData.append("image", file);
+
+            fetch('/remove-bg', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const downloadLink = document.getElementById('download');
+                downloadLink.href = url;
+                downloadLink.style.display = "block";
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+</body>
+</html>
