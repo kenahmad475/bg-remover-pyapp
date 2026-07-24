@@ -1,12 +1,12 @@
+import os
+os.environ["U2NET_HOME"] = "/tmp/u2net_models"  # must be set BEFORE importing rembg
+
 from flask import Flask, request, send_file, render_template
 from rembg import remove
 from PIL import Image
-import io
-import os
 
 app = Flask(__name__)
 
-# Ensure the upload and output directories exist
 UPLOAD_FOLDER = "/tmp/uploads"
 OUTPUT_FOLDER = "/tmp/outputs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
