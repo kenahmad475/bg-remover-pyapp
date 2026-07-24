@@ -7,8 +7,8 @@ import os
 app = Flask(__name__)
 
 # Ensure the upload and output directories exist
-UPLOAD_FOLDER = "uploads"
-OUTPUT_FOLDER = "outputs"
+UPLOAD_FOLDER = "/tmp/uploads"
+OUTPUT_FOLDER = "/tmp/outputs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
@@ -39,7 +39,4 @@ def remove_bg():
     output_image.save(output_path, 'PNG')
 
     return send_file(output_path, as_attachment=True, mimetype='image/png')
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
 
